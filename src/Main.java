@@ -26,7 +26,7 @@ public class Main {
             board.setScoreLabel(scoreLabel);
             board.setLevelLabel(levelLabel);
 
-            frame.add(topPanel, BorderLayout.SOUTH);
+            frame.add(topPanel, BorderLayout.NORTH);
             frame.add(board);
             frame.pack();
             frame.setLocationRelativeTo(null);

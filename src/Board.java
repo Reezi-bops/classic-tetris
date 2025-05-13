@@ -20,6 +20,21 @@ public class Board extends JPanel implements ActionListener {
         setBackground(Color.BLACK);
         setFocusable(true);
 
+        int option = JOptionPane.showOptionDialog(
+                this,
+                "🎮 Click Play to play classic Tetris!",
+                "Start Game",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new String[]{"Play"},
+                "Play"
+        );
+
+        if (option != 0) {
+            System.exit(0);
+        }
+
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
