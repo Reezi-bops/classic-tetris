@@ -7,13 +7,13 @@ import java.util.List;
 
 public class Board extends JPanel implements ActionListener {
     private JLabel scoreLabel, levelLabel;
-    private Tetromino current;
+    private Tetromino tetris;
     private final Timer timer;
-    private boolean flashing = false;
     private int moveX, moveY, score = 0,  level = 1;
     private List<Integer> flashRows = new ArrayList<>();
-    private boolean[][] boardGrid = new boolean[BOARD_HEIGHT][BOARD_WIDTH];
     private static final int BOARD_WIDTH = 10, BOARD_HEIGHT = 20, BLOCK_SIZE = 30;
+    private boolean[][] boardGrid = new boolean[BOARD_HEIGHT][BOARD_WIDTH];
+    private boolean flashing = false;
 
     public Board() {
         setPreferredSize(new Dimension(BOARD_WIDTH * BLOCK_SIZE, BOARD_HEIGHT * BLOCK_SIZE));
@@ -23,19 +23,19 @@ public class Board extends JPanel implements ActionListener {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (current == null) return;
+                if (tetris == null) return;
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT -> moveIfValid(moveX - 1, moveY, current);
-                    case KeyEvent.VK_RIGHT -> moveIfValid(moveX + 1, moveY, current);
+                    case KeyEvent.VK_LEFT -> moveIfValid(moveX - 1, moveY, tetris);
+                    case KeyEvent.VK_RIGHT -> moveIfValid(moveX + 1, moveY, tetris);
                     case KeyEvent.VK_DOWN -> {
-                        if (!moveIfValid(moveX, moveY + 1, current)) lockPiece();
+                        if (!moveIfValid(moveX, moveY + 1, tetris)) lockPiece();
                     }
                     case KeyEvent.VK_UP -> {
-                        Tetromino rotated = current.rotate();
-                        if (isValid(moveX, moveY, rotated)) current = rotated;
+                        Tetromino rotated = tetris.rotate();
+                        if (isValid(moveX, moveY, rotated)) tetris = rotated;
                     }
                     case KeyEvent.VK_SPACE -> {
-                        while (isValid(moveX, moveY + 1, current)) moveY++;
+                        while (isValid(moveX, moveY + 1, tetris)) moveY++;
                         lockPiece();
                     }
                 }
@@ -57,10 +57,10 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void spawnPiece() {
-        current = Tetromino.randomPiece();
+        tetris = Tetromino.randomPiece();
         moveX = BOARD_WIDTH / 2 - 1;
         moveY = 0;
-        if (!isValid(moveX, moveY, current)) {
+        if (!isValid(moveX, moveY, tetris)) {
             timer.stop();
             int option = JOptionPane.showOptionDialog(this, "Game Over!\nScore: " + score,
                     "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
@@ -99,7 +99,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void lockPiece() {
-        for (Point p : current.getBlocks()) {
+        for (Point p : tetris.getBlocks()) {
             boardGrid[moveY + p.y][moveX + p.x] = true;
         }
         checkClearLines();
@@ -159,11 +159,14 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void updateLabels() {
-        if (scoreLabel != null) scoreLabel.setText("Score: " + score);
-        if (levelLabel != null) levelLabel.setText("Level: " + level);
+        if (scoreLabel != null) {
+            scoreLabel.setText("Score: " + score);
+        }
+        if (levelLabel != null) {
+            levelLabel.setText("Level: " + level);
+        }
     }
 
-    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -183,9 +186,9 @@ public class Board extends JPanel implements ActionListener {
             }
         }
 
-        if (current != null && !flashing) {
+        if (tetris != null && !flashing) {
             g.setColor(Color.MAGENTA);
-            for (Point p : current.getBlocks()) {
+            for (Point p : tetris.getBlocks()) {
                 drawBlock(g, moveX + p.x, moveY + p.y);
             }
         }
@@ -205,7 +208,7 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!moveIfValid(moveX, moveY + 1, current)) {
+        if (!moveIfValid(moveX, moveY + 1, tetris)) {
             lockPiece();
         }
         repaint();

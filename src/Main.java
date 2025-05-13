@@ -13,9 +13,8 @@ public class Main {
 
             Font labelFont = new Font("Consolas", Font.BOLD, 18);
             scoreLabel.setFont(labelFont);
-            levelLabel.setFont(labelFont);
-
             scoreLabel.setForeground(new Color(57, 255, 20));
+            levelLabel.setFont(labelFont);
             levelLabel.setForeground(new Color(255, 255, 0));
 
             JPanel topPanel = new JPanel();
@@ -29,7 +28,6 @@ public class Main {
 
             frame.add(topPanel, BorderLayout.NORTH);
             frame.add(board);
-
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);

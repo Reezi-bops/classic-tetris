@@ -16,14 +16,14 @@ public class Tetromino {
             {new Point(0, 0), new Point(-1, 0), new Point(-2, 0), new Point(0, 1)}  // mirrored L
     };
 
+    public Point[] getBlocks() {
+        return blocks;
+    }
+
     private static List<Point[]> bag = new ArrayList<>();
 
     private Tetromino(Point[] blocks) {
         this.blocks = blocks;
-    }
-
-    public Point[] getBlocks() {
-        return blocks;
     }
 
     public Tetromino rotate() {
@@ -34,16 +34,18 @@ public class Tetromino {
         return new Tetromino(rb);
     }
 
-    public static Tetromino randomPiece() {
-        if (bag.isEmpty()) refillBag();
-        return new Tetromino(bag.remove(0));
-    }
-
     private static void refillBag() {
         bag.clear();
         for (Point[] shape : SHAPES) {
             bag.add(shape);
         }
         Collections.shuffle(bag);
+    }
+
+    public static Tetromino randomPiece() {
+        if (bag.isEmpty()) {
+            refillBag();
+        }
+        return new Tetromino(bag.remove(0));
     }
 }
