@@ -6,14 +6,18 @@ import java.util.List;
 public class Tetromino {
     private final Point[] blocks;
 
+    private Tetromino(Point[] blocks) {
+        this.blocks = blocks;
+    }
+
     private static final Point[][] SHAPES = {
-            {new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(1, 1)}, // O
-            {new Point(0, 0), new Point(-1, 0), new Point(1, 0), new Point(2, 0)}, // I
-            {new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(-1, 1)}, // Z
-            {new Point(0, 0), new Point(-1, 0), new Point(0, 1), new Point(1, 1)}, // S
-            {new Point(0, 0), new Point(-1, 0), new Point(1, 0), new Point(0, 1)}, // T
-            {new Point(0, 0), new Point(1, 0), new Point(2, 0), new Point(0, 1)}, // L
-            {new Point(0, 0), new Point(-1, 0), new Point(-2, 0), new Point(0, 1)}  // mirrored L
+            {new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(1, 1)},
+            {new Point(0, 0), new Point(-1, 0), new Point(1, 0), new Point(2, 0)},
+            {new Point(0, 0), new Point(1, 0), new Point(0, 1), new Point(-1, 1)},
+            {new Point(0, 0), new Point(-1, 0), new Point(0, 1), new Point(1, 1)},
+            {new Point(0, 0), new Point(-1, 0), new Point(1, 0), new Point(0, 1)},
+            {new Point(0, 0), new Point(1, 0), new Point(2, 0), new Point(0, 1)},
+            {new Point(0, 0), new Point(-1, 0), new Point(-2, 0), new Point(0, 1)}
     };
 
     public Point[] getBlocks() {
@@ -21,10 +25,6 @@ public class Tetromino {
     }
 
     private static List<Point[]> bag = new ArrayList<>();
-
-    private Tetromino(Point[] blocks) {
-        this.blocks = blocks;
-    }
 
     public Tetromino rotate() {
         Point[] rb = new Point[blocks.length];

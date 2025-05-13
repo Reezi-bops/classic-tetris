@@ -56,6 +56,15 @@ public class Board extends JPanel implements ActionListener {
         this.levelLabel = label;
     }
 
+    private void updateLabels() {
+        if (scoreLabel != null) {
+            scoreLabel.setText("Score: " + score);
+        }
+        if (levelLabel != null) {
+            levelLabel.setText("Level: " + level);
+        }
+    }
+
     private void spawnPiece() {
         tetris = Tetromino.randomPiece();
         moveX = BOARD_WIDTH / 2 - 1;
@@ -65,8 +74,11 @@ public class Board extends JPanel implements ActionListener {
             int option = JOptionPane.showOptionDialog(this, "Game Over!\nScore: " + score,
                     "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
                     null, new String[]{"Restart", "Exit"}, "Restart");
-            if (option == JOptionPane.YES_OPTION) resetGame();
-            else System.exit(0);
+            if (option == JOptionPane.YES_OPTION) {
+                resetGame();
+            } else {
+                System.exit(0);
+            }
         }
     }
 
@@ -92,8 +104,12 @@ public class Board extends JPanel implements ActionListener {
     private boolean isValid(int x, int y, Tetromino piece) {
         for (Point p : piece.getBlocks()) {
             int nx = x + p.x, ny = y + p.y;
-            if (nx < 0 || nx >= BOARD_WIDTH || ny < 0 || ny >= BOARD_HEIGHT) return false;
-            if (boardGrid[ny][nx]) return false;
+            if (nx < 0 || nx >= BOARD_WIDTH || ny < 0 || ny >= BOARD_HEIGHT) {
+                return false;
+            }
+            if (boardGrid[ny][nx]) {
+                return false;
+            }
         }
         return true;
     }
@@ -155,15 +171,6 @@ public class Board extends JPanel implements ActionListener {
             });
             flash.setRepeats(false);
             flash.start();
-        }
-    }
-
-    private void updateLabels() {
-        if (scoreLabel != null) {
-            scoreLabel.setText("Score: " + score);
-        }
-        if (levelLabel != null) {
-            levelLabel.setText("Level: " + level);
         }
     }
 
