@@ -128,8 +128,8 @@ public class Board extends JPanel implements ActionListener {
 
             final int lines = linesCleared;
 
-            Timer flashTimer = new Timer(150, null);
-            flashTimer.addActionListener(e -> {
+            Timer flash = new Timer(150, null);
+            flash.addActionListener(e -> {
                 for (int row : flashRows) {
                     for (int col = 0; col < BOARD_WIDTH; col++) {
                         boardGrid[row][col] = false;
@@ -151,10 +151,10 @@ public class Board extends JPanel implements ActionListener {
                 flashing = false;
                 timer.start();
                 repaint();
-                flashTimer.stop();
+                flash.stop();
             });
-            flashTimer.setRepeats(false);
-            flashTimer.start();
+            flash.setRepeats(false);
+            flash.start();
         }
     }
 
