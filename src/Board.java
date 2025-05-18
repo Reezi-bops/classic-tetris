@@ -14,6 +14,8 @@ public class Board extends JPanel implements ActionListener {
     private static final int BOARD_WIDTH = 10, BOARD_HEIGHT = 20, BLOCK_SIZE = 30;
     private boolean[][] boardGrid = new boolean[BOARD_HEIGHT][BOARD_WIDTH];
     private boolean flashing = false;
+    private SoundPlayer bgMusic = new SoundPlayer();
+    SoundPlayer sfx = new SoundPlayer();
 
     public Board() {
         setPreferredSize(new Dimension(BOARD_WIDTH * BLOCK_SIZE, BOARD_HEIGHT * BLOCK_SIZE));
@@ -40,18 +42,36 @@ public class Board extends JPanel implements ActionListener {
             public void keyPressed(KeyEvent e) {
                 if (tetris == null) return;
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT -> moveIfValid(moveX - 1, moveY, tetris);
-                    case KeyEvent.VK_RIGHT -> moveIfValid(moveX + 1, moveY, tetris);
+                    case KeyEvent.VK_LEFT -> {
+                        if (moveIfValid(moveX - 1, moveY, tetris)) {
+                            sfx.playOnce("move.wav", 0.2f);
+                        }
+                    }
+                    case KeyEvent.VK_RIGHT -> {
+                        if (moveIfValid(moveX + 1, moveY, tetris)) {
+                            sfx.playOnce("move.wav", 0.2f);
+                        }
+                    }
                     case KeyEvent.VK_DOWN -> {
-                        if (!moveIfValid(moveX, moveY + 1, tetris)) lockPiece();
+                        if (!moveIfValid(moveX, moveY + 1, tetris)) {
+                            lockPiece();
+                        } else {
+                            sfx.playOnce("move.wav", 0.2f);
+                        }
                     }
                     case KeyEvent.VK_UP -> {
                         Tetromino rotated = tetris.rotate();
-                        if (isValid(moveX, moveY, rotated)) tetris = rotated;
+                        if (isValid(moveX, moveY, rotated)) {
+                            tetris = rotated;
+                            sfx.playOnce("rotate.wav", 0.1f);
+                        }
                     }
                     case KeyEvent.VK_SPACE -> {
-                        while (isValid(moveX, moveY + 1, tetris)) moveY++;
+                        while (isValid(moveX, moveY + 1, tetris)) {
+                            moveY++;
+                        }
                         lockPiece();
+                        sfx.playOnce("drop.wav", 0.4f);
                     }
                 }
                 repaint();
@@ -59,6 +79,7 @@ public class Board extends JPanel implements ActionListener {
         });
 
         timer = new Timer(500, this);
+        bgMusic.play("gamemusic.wav", true, 0.5f);
         timer.start();
         spawnPiece();
     }
@@ -186,6 +207,7 @@ public class Board extends JPanel implements ActionListener {
             });
             flash.setRepeats(false);
             flash.start();
+            sfx.playOnce("lineclear.wav", 0.5f);
         }
     }
 

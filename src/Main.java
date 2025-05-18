@@ -3,21 +3,23 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Main {
-
         private static void Loading() {
                 JWindow loadingWindow = new JWindow();
-                loadingWindow.setSize(500, 120);
+                loadingWindow.setSize(500, 150);
                 loadingWindow.setLocationRelativeTo(null);
                 loadingWindow.setLayout(null);
                 loadingWindow.getContentPane().setBackground(Color.BLACK);
 
-                JLabel title = new JLabel("LOADING CLASSIC TETRIS...", SwingConstants.CENTER);
-                title.setBounds(0, 10, 500, 30);
-                title.setForeground(Color.GREEN);
-                title.setFont(new Font("Consolas", Font.BOLD, 22));
+                SoundPlayer loadingMusic = new SoundPlayer();
+                loadingMusic.play("loading.wav", false, 1.0f);
+
+                JLabel loadingText = new JLabel("LOADING CLASSIC TETRIS", SwingConstants.CENTER);
+                loadingText.setBounds(0, 20, 500, 30);
+                loadingText.setForeground(Color.GREEN);
+                loadingText.setFont(new Font("Consolas", Font.BOLD, 22));
 
                 JProgressBar progressBar = new JProgressBar(0, 100);
-                progressBar.setBounds(50, 50, 400, 30);
+                progressBar.setBounds(50, 70, 400, 30);
                 progressBar.setValue(0);
                 progressBar.setForeground(Color.GREEN);
                 progressBar.setBackground(Color.DARK_GRAY);
@@ -25,26 +27,39 @@ public class Main {
                 progressBar.setStringPainted(true);
                 progressBar.setFont(new Font("Consolas", Font.PLAIN, 14));
 
-                loadingWindow.add(title);
+                loadingWindow.add(loadingText);
                 loadingWindow.add(progressBar);
                 loadingWindow.setVisible(true);
 
-                Timer timer = new Timer(80, null);
-                timer.addActionListener(new AbstractAction() {
-                        int count = 0;
+                Timer textTimer = new Timer(500, null);
+                textTimer.addActionListener(new ActionListener() {
+                        int dotCount = 0;
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                                count++;
-                                progressBar.setValue(count);
-                                if (count >= 100) {
-                                        timer.stop();
+                                dotCount = (dotCount + 1) % 4;
+                                String dots = ".".repeat(dotCount);
+                                loadingText.setText("LOADING CLASSIC TETRIS" + dots);
+                        }
+                });
+                textTimer.start();
+
+                Timer barTimer = new Timer(40, null);
+                barTimer.addActionListener(new ActionListener() {
+                        int progress = 0;
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                                progress++;
+                                progressBar.setValue(progress);
+                                if (progress >= 100) {
+                                        barTimer.stop();
+                                        textTimer.stop();
                                         loadingWindow.dispose();
                                 }
                         }
                 });
-
-                timer.start();
+                barTimer.start();
 
                 while (progressBar.getValue() < 100) {
                         try {
@@ -52,6 +67,7 @@ public class Main {
                         } catch (InterruptedException ignored) {}
                 }
         }
+
 
         private static void Main() {
                 JFrame frame = new JFrame("Classic Tetris");
